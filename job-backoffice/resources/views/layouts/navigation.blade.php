@@ -33,6 +33,15 @@
             Users
         </x-nav-link>
 
+        <hr />
+
+        {{-- Logout --}}
+        <form method="POST" action="{{ route('logout')}}">
+            @csrf
+            <x-nav-link href="{{ route('logout') }}" :active="false" class="text-red-600" onclick="event.preventDefault(); this.closest('form').submit();">
+                Logout
+            </x-nav-link>
+        </form>
 
     </ul>
 
