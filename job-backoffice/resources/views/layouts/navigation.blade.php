@@ -17,11 +17,11 @@
             Companies
         </x-nav-link>
 
-        <x-nav-link href="{{ route('application.index') }}" :active="request()->routeIs('application.index')">
+        <x-nav-link href="{{ route('job-application.index') }}" :active="request()->routeIs('application.index')">
             Job Applications
         </x-nav-link>
 
-        <x-nav-link href="{{ route('category.index') }}" :active="request()->routeIs('category.index')">
+        <x-nav-link href="{{ route('job-category.index') }}" :active="request()->routeIs('category.index')">
             Job Categories
         </x-nav-link>
 
