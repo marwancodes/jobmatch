@@ -14,10 +14,20 @@ use Illuminate\Support\Facades\Route;
 Route::middleware('auth')->group(function () {
 
     Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
-    Route::get('/companies', [CompanyController::class, 'index'])->name('company.index');
-    Route::get('/job-applications', [JobApplicationController::class, 'index'])->name('job-application.index');
-    Route::get('/job-categories', [JobCategoryController::class, 'index'])->name('job-category.index');
-    Route::get('/job-vacancies', [JobVacancyController::class, 'index'])->name('job-vacancy.index');
+
+    // Companies
+    Route::resource('companies', CompanyController::class); // Make sure the controller name matches the route in views
+
+    // Job Applications
+    Route::resource('job-applications', JobApplicationController::class);
+
+    // Job Categories
+    Route::resource('job-categories', JobCategoryController::class);
+
+    // Job Vacancies
+    Route::resource('job-vacancies', JobVacancyController::class);
+
+    // Users
     Route::get('/users', [UserController::class, 'index'])->name('user.index');
 
 
