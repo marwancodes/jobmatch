@@ -14,7 +14,7 @@ class JobCategoryController extends Controller
     {
         $query = JobCategory::latest();
 
-        $categories = $query->paginate(10)->onEachSide(1);
+        $categories = $query->paginate(3)->onEachSide(1);
 
         return view('job-category.index', compact('categories'));
     }
