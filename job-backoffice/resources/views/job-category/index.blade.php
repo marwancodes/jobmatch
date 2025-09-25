@@ -6,7 +6,9 @@
     </x-slot>
     
     <div class="p-6 overflow-x-auto">
-        
+
+        {{-- Success Message --}}
+        <x-toast-notification />
 
         {{-- Add Category Button --}}
         <div class="flex items-center justify-end">
