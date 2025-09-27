@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\JobCategoryCreateRequest;
+use App\Http\Requests\JobCategoryUpdateRequest;
 use App\Models\JobCategory;
 use Illuminate\Http\Request;
 
@@ -11,9 +12,15 @@ class JobCategoryController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
+        // Active
         $query = JobCategory::latest();
+
+        // Archived
+        if ($request->has('archived') == 'true') {
+            $query->onlyTrashed();
+        }
 
         $categories = $query->paginate(5)->onEachSide(1);
 
@@ -53,15 +60,21 @@ class JobCategoryController extends Controller
      */
     public function edit(string $id)
     {
-        //
+        $category = JobCategory::findOrFail($id);
+        return view('job-category.edit', compact('category')); // compact means to pass the variable to the view
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(JobCategoryUpdateRequest $request, string $id)
     {
-        //
+        $validated = $request->validated();
+
+        $category = JobCategory::findOrFail($id);
+        $category->update($validated);
+
+        return redirect()->route('job-categories.index')->with('success', 'Job category updated successfully.');
     }
 
     /**
@@ -69,6 +82,19 @@ class JobCategoryController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        $category = JobCategory::findOrFail($id);
+        $category->delete();
+
+        return redirect()->route('job-categories.index')->with('success', 'Job category archived successfully.');
+    }
+
+    /**
+     * Restore the specified resource from storage.
+     */
+    public function restore(string $id)
+    {
+        $category = JobCategory::withTrashed()->findOrFail($id);
+        $category->restore();
+        return redirect()->route('job-categories.index', ['archived' => 'true'])->with('success', 'Job category restored successfully.');
     }
 }

@@ -1,7 +1,7 @@
 <x-app-layout>
     <x-slot name="header">
         <h2 class="text-xl font-semibold leading-tight text-gray-800">
-            {{ __('Job Categories') }}
+            Job Categories {{ request()->input('archived') == 'true' ? '(Archived)' : '' }}
         </h2>
     </x-slot>
     
@@ -10,8 +10,26 @@
         {{-- Success Message --}}
         <x-toast-notification />
 
-        {{-- Add Category Button --}}
-        <div class="flex items-center justify-end">
+        <div class="flex items-center justify-between">
+            
+            @if (request()->has('archived') && request()->input('archived') == 'true')
+                {{-- Active --}}
+                <a href="{{ route('job-categories.index') }}" 
+                    class="px-4 py-2 font-semibold text-white bg-blue-600 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    Active Categories
+                </a>
+            @else
+                {{-- Archived --}}
+                <a href="{{ route('job-categories.index', ['archived' =>  'true' ]) }}" 
+                    class="px-4 py-2 font-semibold text-white bg-gray-600 rounded-md hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-500">
+                    Archived Categories
+                </a>
+            @endif
+            
+            
+            
+    
+            {{-- Add Category Button --}}
             <a href="{{ route('job-categories.create') }}" class="px-4 py-2 font-semibold text-white bg-green-600 rounded-md hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500">
                 Add Job Category
             </a>
@@ -26,28 +44,46 @@
                 </tr>
             </thead>
             <tbody>
-                @foreach ($categories as $category)
+                @forelse ($categories as $category)
                     <tr class="border-b">
                         <td class="px-6 py-4 text-gray-800">{{ $category->name }}</td>
                         <td>
                             <div class="flex space-x-4">
-                                {{-- Edit Button --}}
-                                <a href="{{ route('job-categories.edit', $category->id) }}" class="text-blue-500 hover:text-blue-700">
-                                    Edit
-                                </a>
-    
-                                {{-- Delete Button --}}
-                                <form action="{{ route('job-categories.destroy', $category->id)}}" method="POST" class="inline-block">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="submit" class="ml-4 text-red-500 hover:text-red-700" onclick="return confirm('Are you sure you want to delete this category?');">
-                                        Archive
-                                    </button>
-                                </form>
+
+                                @if (request()->has('archived') && request()->input('archived') == 'true')
+                                    {{-- Restore Button --}}
+                                    <form action="{{ route('job-categories.restore', $category->id) }}" method="POST" class="inline-block">
+                                        @csrf
+                                        @method('PUT')
+                                        <button type="submit" class="text-green-600 hover:text-green-800" onclick="return confirm('Are you sure you want to restore this category?');">
+                                            ♻️ Restore
+                                        </button>
+                                    </form>
+                                @else 
+                                    {{-- Edit Button --}}
+                                    <a href="{{ route('job-categories.edit', $category->id) }}" class="text-blue-500 hover:text-blue-700">
+                                        Edit
+                                    </a>
+        
+                                    {{-- Delete Button --}}
+                                    <form action="{{ route('job-categories.destroy', $category->id)}}" method="POST" class="inline-block">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="ml-4 text-red-500 hover:text-red-700" onclick="return confirm('Are you sure you want to delete this category?');">
+                                            Archive
+                                        </button>
+                                    </form>
+                                @endif
                             </div>
                         </td>
                     </tr>
-                @endforeach 
+                @empty
+                    <tr>
+                        <td colspan="2" class="px-6 py-4 text-center text-gray-500">
+                            No job categories found.
+                        </td>
+                    </tr>
+                @endforelse 
             </tbody>
         </table>
 

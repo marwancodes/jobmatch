@@ -1,4 +1,4 @@
-{{-- Success Message --}}
+
 <div class="absolute inset-x-0 bottom-0 z-50">
     @if (session('success'))
         <div x-data="{ show: true }" x-show="show" x-transition x-init="setTimeout(() => show = false, 3000)"
