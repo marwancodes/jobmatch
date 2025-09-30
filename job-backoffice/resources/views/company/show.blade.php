@@ -20,6 +20,7 @@
             {{-- Company Details --}}
             <div class="mb-6 space-y-2">
                 <h3 class="text-lg font-bold">Company Information</h3>
+                <p><strong>Owner:</strong> {{ $company->owner->name }}</p>
                 <p><strong>Address:</strong> {{ $company->address }}</p>
                 <p><strong>Industry:</strong> {{ $company->industry }}</p>
                 <p><strong>Website:</strong> <a href="{{ $company->website }}" class="text-blue-500 underline hover:text-blue-700" target="_blank">{{ $company->website }}</a></p>
