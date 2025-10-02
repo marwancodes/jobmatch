@@ -18,6 +18,8 @@ Route::middleware('auth')->group(function () {
     // Companies
     Route::resource('companies', CompanyController::class); // Make sure the controller name matches the route in views
     Route::put('companies/{id}/restore', [CompanyController::class, 'restore'])->name('companies.restore');
+    // Route::put('companies/{id}/update', [CompanyController::class, 'update'])->name('companies.update');
+
 
     // Job Applications
     Route::resource('job-applications', JobApplicationController::class);

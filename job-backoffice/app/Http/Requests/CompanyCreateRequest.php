@@ -37,10 +37,10 @@ class CompanyCreateRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'name.required' => 'The category name is required.',
-            'name.string' => 'The category name must be a string.',
-            'name.max' => 'The category name may not be greater than 255 characters.',
-            'name.unique' => 'The category name has already been taken.',
+            'name.required' => 'The company name is required.',
+            'name.string' => 'The company name must be a string.',
+            'name.max' => 'The company name may not be greater than 255 characters.',
+            'name.unique' => 'The company name has already been taken.',
             'address.required' => 'The address is required.',
             'address.string' => 'The address must be a string.',
             'address.max' => 'The address may not be greater than 255 characters.',

@@ -28,7 +28,7 @@
 
             {{-- Edit and Archive Buttons --}}
             <div class="flex mb-6 space-x-4">
-                <a href="{{ route('companies.edit', $company->id) }}" 
+                <a href="{{ route('companies.edit', ['company' => $company->id, 'redirectToList' == 'true']) }}" 
                     class="px-4 py-2 font-semibold text-white bg-blue-600 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500">
                     Edit Company
                 </a>

@@ -12,9 +12,17 @@ use Illuminate\Support\Facades\Hash;
 
 class CompanyController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
+    
+    public $industries = [
+        'Technology',
+        'Finance',
+        'Healthcare',
+        'Education',
+        'Retail',
+        'Manufacturing',
+        'other',
+    ];
+
     public function index(Request $request)
     {
         // Active
@@ -35,15 +43,8 @@ class CompanyController extends Controller
      */
     public function create()
     {
-        $industries = [
-            'Technology',
-            'Finance',
-            'Healthcare',
-            'Education',
-            'Retail',
-            'Manufacturing',
-            'other',
-        ];
+        $industries = $this->industries;
+
         return view('company.create', compact('industries'));
     }
 
@@ -96,7 +97,8 @@ class CompanyController extends Controller
     public function edit(string $id)
     {
         $company = Company::findOrFail($id);
-        return view('company.edit', compact('company')); // compact means to pass the variable to the view
+        $industries = $this->industries;
+        return view('company.edit', compact('company', 'industries')); // compact means to pass the variable to the view
     }
 
     /**
@@ -105,11 +107,30 @@ class CompanyController extends Controller
     public function update(CompanyUpdateRequest $request, string $id)
     {
         $validated = $request->validated();
-
         $company = Company::findOrFail($id);
-        $company->update($validated);
 
-        return redirect()->route('companies.index')->with('success', 'Company updated successfully.');
+        $company->update([
+            'name'=> $validated['name'],
+            'address'=> $validated['address'],
+            'industry'=> $validated['industry'],
+            'website'=> $validated['website'],
+        ]);
+
+        // Update Owner as well
+        $ownerData = [];
+        $ownerData['name'] = $validated['owner_name'];
+
+        if ($validated['owner_password']) {
+            $ownerData['password'] = Hash::make($validated['owner_password']);
+        }
+
+        $company->owner->update($ownerData);
+
+        if ($request->query('redirectToList') == 'true') {
+            return redirect()->route('companies.show', $id)->with('success', 'Company updated successfully.');
+        }
+        
+        return redirect()->route('companies.index')->with('success', 'Company updated successfully.');  
     }
 
     /**
