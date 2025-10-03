@@ -67,7 +67,7 @@
                                     </form>
                                 @else 
                                     {{-- Edit Button --}}
-                                    <a href="{{ route('companies.edit', $company->id) }}" class="text-blue-500 hover:text-blue-700">
+                                    <a href="{{ route('companies.edit', ['company' => $company->id, 'redirectToList' => 'true']) }}" class="text-blue-500 hover:text-blue-700">
                                         Edit
                                     </a>
         
