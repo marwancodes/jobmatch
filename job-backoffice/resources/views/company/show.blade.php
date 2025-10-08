@@ -53,7 +53,7 @@
                     </li>
                     <li>
                         <a href="{{ route('companies.show',['company' => $company->id, 'tab' => 'applications']) }}" 
-                            class="px-4 py-2 font-semibold text-gray-800 {{ request('tab') == 'applications' || request('tab') == '' ? 'border-b-2 border-blue-600' : '' }}">
+                            class="px-4 py-2 font-semibold text-gray-800 {{ request('tab') == 'applications' ? 'border-b-2 border-blue-600' : '' }}">
                             Applications
                         </a>
                     </li>
