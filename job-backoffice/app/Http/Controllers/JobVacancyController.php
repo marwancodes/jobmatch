@@ -2,6 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\JobVacancyCreateRequest;
+use App\Models\Company;
+use App\Models\JobCategory;
 use App\Models\JobVacancy;
 use Illuminate\Http\Request;
 
@@ -30,15 +33,19 @@ class JobVacancyController extends Controller
      */
     public function create()
     {
-        //
+        $companies = Company::all();
+        $jobCategories = JobCategory::all();
+        return view('job-vacancy.create', compact('companies', 'jobCategories'));
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(JobVacancyCreateRequest $request)
     {
-        //
+        $validated = $request->validated();
+        JobVacancy::create($validated);
+        return redirect()->route('job-vacancies.index')->with('success','Job Vacancy created successfully');
     }
 
     /**

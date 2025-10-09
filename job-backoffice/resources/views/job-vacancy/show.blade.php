@@ -73,7 +73,7 @@
                         </thead>
                         <tbody>
                             {{-- (HasMany) --}}
-                            @foreach ($jobVacancy->jobApplications as $application)
+                            @forelse ($jobVacancy->jobApplications as $application)
                                 <tr>
                                     <td class="px-4 py-2 border-b">{{ $application->user->name }}</td>
                                     <td class="px-4 py-2 border-b">{{ $application->jobVacancy->title }}</td>
@@ -82,7 +82,13 @@
                                         <a href="{{ route('job-applications.show', $application->id) }}" class="text-blue-500 underline hover:text-blue-700">View</a>
                                     </td>
                                 </tr>
-                            @endforeach
+                                @empty
+                                    <tr>
+                                        <td colspan="5" class="w-full px-6 py-4 text-center text-gray-500">
+                                            No Applications found.
+                                        </td>
+                                    </tr>
+                            @endforelse
                         </tbody>
                     </table>
                 </div>
