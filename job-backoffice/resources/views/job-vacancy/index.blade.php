@@ -16,13 +16,13 @@
                 {{-- Active --}}
                 <a href="{{ route('job-vacancies.index') }}" 
                     class="px-4 py-2 font-semibold text-white bg-blue-600 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500">
-                    Active Vacancies
+                    Active Job Vacancies
                 </a>
             @else
                 {{-- Archived --}}
                 <a href="{{ route('job-vacancies.index', ['archived' =>  'true' ]) }}" 
                     class="px-4 py-2 font-semibold text-white bg-gray-600 rounded-md hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-500">
-                    Archived Vacancies
+                    Archived Job Vacancies
                 </a>
             @endif
             
@@ -31,7 +31,7 @@
     
             {{-- Add Category Button --}}
             <a href="{{ route('job-vacancies.create') }}" class="px-4 py-2 font-semibold text-white bg-green-600 rounded-md hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500">
-                Add Vacancy
+                Add Job Vacancy
             </a>
         </div>
 

@@ -30,6 +30,7 @@ Route::middleware('auth')->group(function () {
 
     // Job Vacancies
     Route::resource('job-vacancies', JobVacancyController::class);
+    Route::put('job-vacancies/{id}/restore', [JobVacancyController::class, 'restore'])->name('job-vacancies.restore');
 
     // Users
     Route::get('/users', [UserController::class, 'index'])->name('user.index');
