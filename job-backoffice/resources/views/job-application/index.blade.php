@@ -52,7 +52,11 @@
                         </td>
                         <td class="px-6 py-4 text-gray-800">{{ $jobApplication->jobVacancy->title }}</td>
                         <td class="px-6 py-4 text-gray-800">{{ $jobApplication->jobVacancy->company->name }}</td>
-                        <td class="px-6 py-4 text-gray-800">{{ $jobApplication->status }}</td>
+                        <td class="px-6 py-4 text-gray-800">
+                            <span class="p-1 font-semibold @if($jobApplication->status == 'accepted') text-white bg-green-600 @elseif($jobApplication->status == 'pending') text-white bg-amber-500 @elseif($jobApplication->status == 'rejected') text-white bg-rose-500 @endif">
+                                {{ $jobApplication->status }}
+                            </span>
+                        </td>
                         <td>
                             <div class="flex space-x-4">
 
