@@ -29,7 +29,7 @@
             Job Vacancies
         </x-nav-link>
 
-        <x-nav-link href="{{ route('user.index') }}" :active="request()->routeIs('user.index')">
+        <x-nav-link href="{{ route('users.index') }}" :active="request()->routeIs('user.index')">
             Users
         </x-nav-link>
 
