@@ -8,6 +8,7 @@ use App\Models\Company;
 use App\Models\JobApplication;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 
 class CompanyController extends Controller
@@ -83,9 +84,14 @@ class CompanyController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show(?string $id = null)
     {
-        $company = Company::findOrFail($id);
+        if ($id) {
+            $company = Company::findOrFail($id);
+        } else {
+            // If no ID is provided, show the company of the authenticated user
+            $company = Company::where('ownerId', Auth::user()->id)->first();
+        }
 
         $applications = JobApplication::with('user')->whereIn('jobVacancyId', $company->jobVacancies->pluck('id'))->get();
         return view('company.show', compact('company', 'applications'));
@@ -94,9 +100,17 @@ class CompanyController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(string $id)
+    public function edit(?string $id = null)
     {
-        $company = Company::findOrFail($id);
+        if ($id) {
+            $company = Company::findOrFail($id);
+        } else {
+            // If no ID is provided, show the company of the authenticated user
+            $company = Company::where('ownerId', Auth::user()->id)->first();
+            // $company = Company::where('ownerId', auth()->user()->id)->first();
+        }
+        
+
         $industries = $this->industries;
         return view('company.edit', compact('company', 'industries')); // compact means to pass the variable to the view
     }
@@ -104,10 +118,18 @@ class CompanyController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(CompanyUpdateRequest $request, string $id)
+    public function update(CompanyUpdateRequest $request, ?string $id = null)
     {
         $validated = $request->validated();
-        $company = Company::findOrFail($id);
+        
+        $user = $request->user();
+        if ($id) {
+            $company = Company::findOrFail($id);
+        } else {
+            // If no ID is provided, show the company of the authenticated user
+            $company = Company::where('ownerId', $user->id)->first();
+        }
+        
 
         $company->update([
             'name'=> $validated['name'],
@@ -125,6 +147,11 @@ class CompanyController extends Controller
         }
 
         $company->owner->update($ownerData);
+        
+        if ($user->role == 'company-owner') {
+            // if company-owner, always redirect to show page
+            return redirect()->route('my-company.show')->with('success', 'Company updated successfully.');
+        }
 
         if ($request->query('redirectToList') == 'true') {
             // if editing from index, go back to index
@@ -156,3 +183,24 @@ class CompanyController extends Controller
         return redirect()->route('companies.index', ['archived' => 'true'])->with('success', 'Company restored successfully.');
     }
 }
+
+
+/* 
+    If you get that red line under $user = $request->user();, you can inform the IDE about the type of $user by adding a PHPDoc comment like this:
+
+    Option A: via the request (type-hint Request)
+    $user = $request->user();
+
+    Option B: via the Auth facade
+    $user = Auth::user();
+
+    Option C: via the helper
+    $user = auth()->user();
+
+
+    Example:
+    instead this: 
+        $company = Company::where('ownerId', auth()->user()->id)->first();
+    Use this:
+        $company = Company::where('ownerId', Auth::user()->id)->first();
+*/

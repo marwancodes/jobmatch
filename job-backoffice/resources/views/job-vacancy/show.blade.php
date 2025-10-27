@@ -24,6 +24,7 @@
                 <p><strong>Company:</strong> {{ $jobVacancy->company->name }}</p>
                 <p><strong>Location:</strong> {{ $jobVacancy->location }}</p>
                 <p><strong>Type:</strong> {{ $jobVacancy->type }}</p>
+                <p><strong>Category:</strong> {{ $jobVacancy->jobCategory->name }}</p>
                 <p><strong>Salary:</strong> {{ $jobVacancy->salary }}</p>
                 <p><strong>Description:</strong>{{ $jobVacancy->description }}</p>
             </div>

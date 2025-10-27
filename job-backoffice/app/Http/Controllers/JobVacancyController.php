@@ -8,6 +8,7 @@ use App\Models\Company;
 use App\Models\JobCategory;
 use App\Models\JobVacancy;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class JobVacancyController extends Controller
 {
@@ -18,6 +19,10 @@ class JobVacancyController extends Controller
     {
          // Active
         $query = JobVacancy::latest();
+
+        if (Auth::user()->role == 'company-owner') {
+            $query->where('companyId', Auth::user()->company->first()->id);
+        }
 
         // Archived
         if ($request->has('archived') == 'true') {

@@ -40,7 +40,9 @@
             <thead>
                 <tr>
                     <th class="px-6 py-3 text-sm font-semibold text-left text-gray-600">Title</th>
-                    <th class="px-6 py-3 text-sm font-semibold text-left text-gray-600">Company</th>
+                    @if (auth()->user()->role == 'admin')
+                        <th class="px-6 py-3 text-sm font-semibold text-left text-gray-600">Company</th>
+                    @endif
                     <th class="px-6 py-3 text-sm font-semibold text-left text-gray-600">Location</th>
                     <th class="px-6 py-3 text-sm font-semibold text-left text-gray-600">Type</th>
                     <th class="px-6 py-3 text-sm font-semibold text-left text-gray-600">Salary</th>
@@ -57,7 +59,9 @@
                                 <a class="text-blue-500 underline hover:text-blue-700" href="{{ route('job-vacancies.show', $jobVanacy->id)}}">{{ $jobVanacy->title }}</a>
                             @endif
                         </td>
-                        <td class="px-6 py-4 text-gray-800">{{ $jobVanacy->company->name }}</td>
+                        @if (auth()->user()->role == 'admin')
+                            <td class="px-6 py-4 text-gray-800">{{ $jobVanacy->company->name }}</td>
+                        @endif
                         <td class="px-6 py-4 text-gray-800">{{ $jobVanacy->location }}</td>
                         <td class="px-6 py-4 text-gray-800">{{ $jobVanacy->type }}</td>
                         <td class="px-6 py-4 text-gray-800">{{ $jobVanacy->salary }}</td>

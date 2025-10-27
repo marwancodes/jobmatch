@@ -90,10 +90,7 @@
                     {{-- Job Description --}}
                     <div class="mb-4">
                         <label for="description" class="block mb-2 text-sm font-medium text-gray-700">Job Description</label>
-                        <textarea rows="4" name="description" id="description" value="{{ old('description', $jobVacancy->description)}}"
-                            class="{{ $errors->has('description') ? 'outline-red-500 outline outline-1' : '' }} w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
-                                {{ old('description', $jobVacancy->description) }}
-                        </textarea>
+                        <textarea rows="4" name="description" id="description" value="{{ old('description', $jobVacancy->description)}}" class="{{ $errors->has('description') ? 'outline-red-500 outline outline-1' : '' }} resize-none w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">{{ old('description', $jobVacancy->description) }}</textarea>
                         @error('description')
                             <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
                         @enderror

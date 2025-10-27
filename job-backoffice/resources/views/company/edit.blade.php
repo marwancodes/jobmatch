@@ -1,3 +1,11 @@
+@php
+    if (auth()->user()->role == 'admin') {
+        $formAction = route('companies.update', ['company' => $company->id, 'redirectToList' => request('redirectToList')]);
+    } else if (auth()->user()->role == 'company-owner') {
+        $formAction = route('my-company.update');
+    }
+@endphp
+
 <x-app-layout>
     <x-slot name="header">
         <h2 class="text-xl font-semibold leading-tight text-gray-800">
@@ -7,7 +15,7 @@
 
     <div class="p-6 overflow-x-auto">
         <div class="max-w-2xl p-6 mx-auto bg-white rounded-lg shadow-md">
-            <form action="{{ route('companies.update', ['company' => $company->id, 'redirectToList' => request('redirectToList')]) }}" method="POST">
+            <form action="{{ $formAction }}" method="POST">
                 @csrf
                 @method('PUT')
 
@@ -110,9 +118,18 @@
                 
 
                 <div class="flex items-center justify-end">
-                    <a href="{{ route('companies.index') }}" class="px-4 mr-4 text-gray-500 rounded-md hover:text-gray-700">
-                        Cancel
-                    </a>
+                    @if (auth()->user()->role == 'company-owner')
+                        <a href="{{ route('my-company.show') }}" class="px-4 mr-4 text-gray-500 rounded-md hover:text-gray-700">
+                            Cancel
+                        </a>
+                    @endif
+
+                    @if (auth()->user()->role == 'admin')
+                        <a href="{{ route('companies.index') }}" class="px-4 mr-4 text-gray-500 rounded-md hover:text-gray-700">
+                            Cancel
+                        </a>
+                    @endif
+                    
                     <button type="submit" class="px-4 py-2 font-semibold text-white bg-blue-600 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500">
                         Update Company
                     </button>

@@ -35,7 +35,9 @@
                 <tr>
                     <th class="px-6 py-3 text-sm font-semibold text-left text-gray-600">Applicant Name</th>
                     <th class="px-6 py-3 text-sm font-semibold text-left text-gray-600">Position (Job Vacancy)</th>
-                    <th class="px-6 py-3 text-sm font-semibold text-left text-gray-600">Company</th>
+                    @if (auth()->user()->role == 'admin')
+                        <th class="px-6 py-3 text-sm font-semibold text-left text-gray-600">Company</th>
+                    @endif
                     <th class="px-6 py-3 text-sm font-semibold text-left text-gray-600">Status</th>
                     <th class="px-6 py-3 text-sm font-semibold text-left text-gray-600">Actions</th>
                 </tr>
@@ -51,7 +53,9 @@
                             @endif
                         </td>
                         <td class="px-6 py-4 text-gray-800">{{ $jobApplication->jobVacancy->title }}</td>
-                        <td class="px-6 py-4 text-gray-800">{{ $jobApplication->jobVacancy->company->name }}</td>
+                        @if (auth()->user()->role == 'admin')
+                            <td class="px-6 py-4 text-gray-800">{{ $jobApplication->jobVacancy->company->name }}</td>
+                        @endif
                         <td class="px-6 py-4 text-gray-800">
                             <span class="p-1 font-semibold @if($jobApplication->status == 'accepted') text-white bg-green-600 @elseif($jobApplication->status == 'pending') text-white bg-amber-500 @elseif($jobApplication->status == 'rejected') text-white bg-rose-500 @endif">
                                 {{ $jobApplication->status }}
