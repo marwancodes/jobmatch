@@ -14,20 +14,36 @@
             {{-- Search & Filters --}}
             <div class="flex items-center justify-between">
                 {{-- Search Bar --}}
-                <form action="" class="flex items-center justify-center w-1/4">
-                    <input type="text" name="search" placeholder="Search jobs..." class="mt-4 rounded-l-lg text-white/50 bg-white/10 w-96 focus:border-indigo-500" />
-                    <button type="submit" class="px-4 py-2 mt-4 font-semibold text-white bg-indigo-500 border border-indigo-500 rounded-r-lg hover:bg-indigo-400">
+                <form action="{{ route('dashboard') }}" method="get" class="flex items-center justify-center w-1/4">
+                    <input type="text" name="search" value="{{ request('search') }}" placeholder="Search jobs..." class="mt-4 rounded-l-lg text-white/50 bg-white/10 w-96 focus:border-indigo-500" />
+                    <button type="submit" class="px-4 py-2 mt-4 font-semibold text-white transition duration-300 bg-indigo-500 border border-indigo-500 rounded-r-lg hover:bg-indigo-400">
                         Search
                     </button>
+                    @if (request('search'))
+                            <a href="{{ route('dashboard', ['filter' => request('filter')]) }}" class="px-4 py-2 mt-4 underline transition duration-300 text-white/50 hover:text-white/70">
+                                Clear
+                            </a>
+                        @endif
                 </form>
 
                 {{-- Filters --}}
                 <div>
-                    <a href="#" class="p-2 text-white bg-indigo-500 rounded-lg">Full Time</a>
-                    <a href="#" class="p-2 text-white bg-indigo-500 rounded-lg">Part Time</a>
-                    <a href="#" class="p-2 text-white bg-indigo-500 rounded-lg">Remote</a>
-                    <a href="#" class="p-2 text-white bg-indigo-500 rounded-lg">Hybrid</a>
-                    <a href="#" class="p-2 text-white bg-indigo-500 rounded-lg">Volunteer</a>
+                    <a href="{{ route('dashboard', ['filter' => 'Full-Time', 'search' => request('search')]) }}"
+                        class="p-2 text-white bg-indigo-500 rounded-lg">Full Time</a>
+                    <a href="{{ route('dashboard', ['filter' => 'Part-Time', 'search' => request('search')]) }}" 
+                        class="p-2 text-white bg-indigo-500 rounded-lg">Part Time</a>
+                    <a href="{{ route('dashboard', ['filter' => 'Remote', 'search' => request('search')]) }}"
+                        class="p-2 text-white bg-indigo-500 rounded-lg">Remote</a>
+                    <a href="{{ route('dashboard', ['filter' => 'Hybrid', 'search' => request('search')]) }}" 
+                        class="p-2 text-white bg-indigo-500 rounded-lg">Hybrid</a>
+                    <a href="{{ route('dashboard', ['filter' => 'Volunteer', 'search' => request('search')]) }}" 
+                        class="p-2 text-white bg-indigo-500 rounded-lg">Volunteer</a>
+
+                    @if (request('filter'))
+                        <a href="{{ route('dashboard', ['search' => request('search')]) }}" class="p-2 underline text-white/50">
+                            Clear
+                        </a>
+                    @endif
                 </div>
 
             </div>
@@ -36,7 +52,7 @@
             <div class="mt-6 space-y-4">
 
                 {{-- Job Item --}}
-                @foreach ($jobs as $job)
+                @forelse ($jobs as $job)
                     <div class="flex items-center justify-between p-4 border-b rounded-lg border-white/10">
                         <div class="flex flex-col gap-2">
                             <a href="#" class="text-lg font-semibold text-blue-400 transition duration-300 hover:underline">{{ $job->title }}</a>
@@ -45,7 +61,9 @@
                         </div>
                         <span class="p-2 text-white bg-blue-500 rounded-lg">{{ $job->type }}</span>
                     </div>
-                @endforeach
+                @empty
+                    <p class="m-20 text-xl font-bold text-center text-white/50">No Jobs found!</p>
+                @endforelse
                 
             </div>
 
