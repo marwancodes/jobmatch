@@ -19,4 +19,9 @@ class JobVacancyController extends Controller
 
         return view('job-vacancies.apply', compact('jobVacancy'));
     }
+
+    public function proccessApplication(Request $request, string $id) {
+        
+    }
+
 }
