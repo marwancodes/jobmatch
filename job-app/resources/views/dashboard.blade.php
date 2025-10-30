@@ -55,7 +55,7 @@
                 @forelse ($jobs as $job)
                     <div class="flex items-center justify-between p-4 border-b rounded-lg border-white/10">
                         <div class="flex flex-col gap-2">
-                            <a href="#" class="text-lg font-semibold text-blue-400 transition duration-300 hover:underline">{{ $job->title }}</a>
+                            <a href="{{ route('job-vacancies.show', $job->id) }}" class="text-lg font-semibold text-blue-400 transition duration-300 hover:underline">{{ $job->title }}</a>
                             <p class="text-sm text-white">{{ $job->company->name }} - {{ $job->location }}</p>
                             <p class="text-sm text-white">£{{ $job->salary }} / Year</p>
                         </div>
