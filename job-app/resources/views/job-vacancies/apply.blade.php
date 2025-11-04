@@ -42,7 +42,7 @@
                 </div>
             </div>
 
-            <form action="{{ route('job-vacancies.proccess-application', $jobVacancy->id) }}" method="POST" class="space-y-6">
+            <form action="{{ route('job-vacancies.proccess-application', $jobVacancy->id) }}" method="POST" class="space-y-6" enctype="multipart/form-data">
                 @csrf
 
                 {{-- Resume Selection --}}
@@ -126,12 +126,20 @@
                             class="absolute inset-0 border-2 pointer-events-none rounded-xl border-indigo-500/40 animate-pulse">
                         </div>
                     </label>
-
-                    @error('resume_file')
-                        <p class="mt-2 text-sm text-red-500">{{ $message }}</p>
-                    @enderror
                 </div>
 
+
+
+                {{-- Errors section --}}
+                @if ($errors->any())
+                    <div class="p-4 text-white bg-red-500 rounded-lg">
+                        <ul>
+                            @foreach ($errors->all() as $error)
+                                <li>{{ $error }}</li>
+                            @endforeach
+                        </ul>
+                    </div>
+                @endif
 
 
                 {{-- Submit Button --}}
