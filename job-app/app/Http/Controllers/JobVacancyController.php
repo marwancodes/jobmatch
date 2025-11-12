@@ -21,41 +21,71 @@ class JobVacancyController extends Controller
     public function apply(string $id) {
 
         $jobVacancy = JobVacancy::findOrFail($id);
+        $resumes = Auth::user()->resumes;
 
-        return view('job-vacancies.apply', compact('jobVacancy'));
+        return view('job-vacancies.apply', compact('jobVacancy', 'resumes'));
     }
 
     public function proccessApplication(ApplyJobRequest $request, string $id) {
 
-        $file = $request->file('resume_file');
+        $resumeId = null;
+        $extractedInfo = null;
 
-        $extension = $file->getClientOriginalExtension();
-        $originalFileName = $file->getClientOriginalName();
-        $fileName = 'resume_' . time() . '.' . $extension;
+        if ($request->input('resume_option') === 'new_resume') {
+            
+            $file = $request->file('resume_file');
+            $extension = $file->getClientOriginalExtension();
+            $originalFileName = $file->getClientOriginalName();
+            $fileName = 'resume_' . time() . '.' . $extension;
+    
+            // Store in Laravel Cloud
+            $path = $file->storeAs('resumes', $fileName, 'cloud');
+    
+            // $fileUrl = config('filesystems.disks.cloud.url') . '/' . $path;
+    
+            // TODO: Extract infotmation from the resume
+            $extractedInfo = [
+                "summary" => '',
+                "skills" => '',
+                "experience" => '',
+                "education" => ''
+            ];
 
-        // Store in Laravel Cloud
-        $path = $file->storeAs('resumes', $fileName, 'cloud');
+            $resume = Resume::create([
+                'filename' => $originalFileName,
+                'fileUri' => $path,
+                'userId' => Auth::id(),
+                'contactDetails' => json_encode([
+                    'name' => Auth::user()->name,
+                    'email' => Auth::user()->name,
+                ]),
+                "summary" => $extractedInfo['summary'],
+                "skills" => $extractedInfo['skills'],
+                "experience" => $extractedInfo['experience'],
+                "education" => $extractedInfo['education']
+            ]);
+            
+            $resumeId = $resume->id;
+    
+        } else {
+            $resumeId = $request->input('resume_option');
+            $resume = Resume::findOrFail($resumeId);
 
-        // $fileUrl = config('filesystems.disks.cloud.url') . '/' . $path;
+            $extractedInfo = [
+                "summary" => $resume->summary,
+                "skills" => $resume->skills,
+                "experience" => $resume->experience,
+                "education" => $resume->education
+            ];
+        }
 
-        $resume = Resume::create([
-            'filename' => $originalFileName,
-            'fileUri' => $path,
-            'userId' => Auth::id(),
-            'contactDetails' => json_encode([
-                'name' => Auth::user()->name,
-                'email' => Auth::user()->name,
-            ]),
-            "summary" => '',
-            "skills" => '',
-            "experience" => '',
-            "education" => ''
-        ]);
-
+        // TODO: Evalute Job Application
+        // Use the $extractedInfo to evalute the job application
+        
         JobApplication::create([
             'status' => 'pending',
             'jobVacancyId' => $id,
-            'resumeId' => $resume->id,
+            'resumeId' => $resumeId,
             'userId' => Auth::id(),
             'aiGeneratedScore' => 0,
             'aiGeneratedFeedback' => ''

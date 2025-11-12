@@ -48,10 +48,26 @@
                 {{-- Resume Selection --}}
                 <div>
                     <h3 class="mb-4 text-xl font-semibold text-white">Choose Your Resume</h3>
+
                     <div class="mb-6">
-                        <x-input-label for="resume" value="Select from your existing resumes" />
+                        <x-input-label for="resume" value="Select from your existing resumes" class="mb-2"/>
                         {{-- List of Resumes --}}
-                    </div>
+                        <div class="space-y-4">
+                            @forelse ($resumes as $resume)
+                                <div class="flex items-center gap-2">
+                                    <input type="radio" name="resume_option" id="{{ $resume->id }}" value="{{ $resume->id }}" class="w-5 h-5 text-indigo-500 transition-all duration-200 bg-transparent border-2 border-gray-600 rounded-full focus:ring-2 focus:ring-indigo-500 focus:ring-offset-0 checked:border-indigo-500 checked:bg-indigo-500/20"
+                                        @error('resume_option') class="border-red-500" @else class="border-gray-600" @enderror
+                                    />
+                                    <x-input-label  for="{{ $resume->id }}" class="text-[#6366f1] cursor-pointer">
+                                        {{ $resume->filename }}
+                                        <span class="text-sm text-gray-400">(Last Updated: {{ $resume->created_at ? $resume->created_at->format('M d, Y') : 'N/A' }})</span>
+                                    </x-input-label>
+                                </div>
+                            @empty
+                                <span class="text-sm text-gray-400">No resumes found.</span>
+                            @endforelse
+                        </div>
+                    </div>  
                 </div>
 
                 {{-- Upload New Resume --}}
@@ -85,14 +101,20 @@
 
                 {{-- Upload New Resume --}}
                 <div x-data="{ fileName: '' }" class="mt-6">
-                    <x-input-label for="resume" value="Upload New Resume" class="mb-4 text-lg font-semibold text-white" />
+
+                    <div class="flex items-center gap-2 mb-2">
+                        <input x-ref="newResumeRadio" type="radio" name="resume_option" id="new_resume" value="new_resume" class="w-5 h-5 text-indigo-500 transition-all duration-200 bg-transparent border-2 border-gray-600 rounded-full focus:ring-2 focus:ring-indigo-500 focus:ring-offset-0 checked:border-indigo-500 checked:bg-indigo-500/20"
+                            @error('resume_option') class="border-red-500" @else class="border-gray-600" @enderror
+                        />
+                        <x-input-label for="new_resume" value="Upload New Resume" class="text-lg font-semibold text-white cursor-pointer" />
+                    </div>
 
                     <label for="new_resume_file" 
                         class="relative flex flex-col items-center justify-center w-full p-6 text-center transition-all duration-300 border-2 border-gray-600 border-dashed cursor-pointer group rounded-xl hover:border-indigo-500 hover:bg-indigo-500/10">
                         
                         {{-- Hidden Input --}}
                         <input 
-                            @change="fileName = $event.target.files[0]?.name || ''" 
+                            @change="fileName = $event.target.files[0]?.name || '' ; $refs.newResumeRadio.checked = true" 
                             type="file" 
                             name="resume_file" 
                             id="new_resume_file" 
