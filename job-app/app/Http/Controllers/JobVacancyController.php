@@ -6,12 +6,20 @@ use App\Http\Requests\ApplyJobRequest;
 use App\Models\JobApplication;
 use App\Models\JobVacancy;
 use App\Models\Resume;
+use App\Services\ResumeAnalysisService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use OpenAI\Laravel\Facades\OpenAI;
 
 class JobVacancyController extends Controller
 {
+    protected $resumeAnalysisService;
+
+    public function __construct(ResumeAnalysisService $resumeAnalysisService) 
+    {
+        $this->resumeAnalysisService = $resumeAnalysisService;
+    }
+
     public function show(string $id) {
 
         $jobVacancy = JobVacancy::findOrFail($id);
@@ -41,15 +49,16 @@ class JobVacancyController extends Controller
             // Store in Laravel Cloud
             $path = $file->storeAs('resumes', $fileName, 'cloud');
     
-            // $fileUrl = config('filesystems.disks.cloud.url') . '/' . $path;
+            $fileUrl = config('filesystems.disks.cloud.url') . '/' . $path;
     
-            // TODO: Extract infotmation from the resume
-            $extractedInfo = [
-                "summary" => '',
-                "skills" => '',
-                "experience" => '',
-                "education" => ''
-            ];
+
+            $extractedInfo = $this->resumeAnalysisService->extractionResumeInformation($fileUrl);
+            // $extractedInfo = [
+            //     "summary" => '',
+            //     "skills" => '',
+            //     "experience" => '',
+            //     "education" => ''
+            // ];
 
             $resume = Resume::create([
                 'filename' => $originalFileName,
@@ -57,12 +66,12 @@ class JobVacancyController extends Controller
                 'userId' => Auth::id(),
                 'contactDetails' => json_encode([
                     'name' => Auth::user()->name,
-                    'email' => Auth::user()->name,
+                    'email' => Auth::user()->email,
                 ]),
-                "summary" => $extractedInfo['summary'],
-                "skills" => $extractedInfo['skills'],
-                "experience" => $extractedInfo['experience'],
-                "education" => $extractedInfo['education']
+                "summary" => is_array($extractedInfo['summary']) ? implode(', ', $extractedInfo['summary']) : $extractedInfo['summary'],
+                "skills" => is_array($extractedInfo['skills']) ? implode(', ', $extractedInfo['skills']) : $extractedInfo['skills'],
+                "experience" => is_array($extractedInfo['experience']) ? implode(', ', $extractedInfo['experience']) : $extractedInfo['experience'],
+                "education" => is_array($extractedInfo['education']) ? implode(', ', $extractedInfo['education']) : $extractedInfo['education'],
             ]);
             
             $resumeId = $resume->id;
@@ -91,7 +100,7 @@ class JobVacancyController extends Controller
             'aiGeneratedFeedback' => ''
         ]);
 
-        return redirect()->route('job-applications.index')->with('success', 'Application submitted successfully');
+        return redirect()->route('job-applications.index', $id)->with('success', 'Application submitted successfully');
     }
 
 
