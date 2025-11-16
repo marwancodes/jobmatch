@@ -51,21 +51,37 @@
             {{-- Job List --}}
             <div class="mt-6 space-y-4">
 
-                {{-- Job Item --}}
                 @forelse ($jobs as $job)
-                    <div class="flex items-center justify-between p-4 border-b rounded-lg border-white/10">
-                        <div class="flex flex-col gap-2">
-                            <a href="{{ route('job-vacancies.show', $job->id) }}" class="text-lg font-semibold text-blue-400 transition duration-300 hover:underline">{{ $job->title }}</a>
-                            <p class="text-sm text-white">{{ $job->company->name }} - {{ $job->location }}</p>
-                            <p class="text-sm text-white">£{{ $job->salary }} / Year</p>
+                    <div class="p-5 transition-all duration-300 border shadow-lg rounded-xl bg-white/5 border-white/10 hover:shadow-xl backdrop-blur-sm">
+
+                        {{-- Top Row --}}
+                        <div class="flex items-start justify-between gap-4">
+                            <div>
+                                <a href="{{ route('job-vacancies.show', $job->id) }}"
+                                class="text-xl font-semibold text-blue-400 hover:underline">
+                                    {{ $job->title }}
+                                </a>
+
+                                <p class="flex items-center gap-1 mt-1 text-sm text-gray-300">
+                                    {{ $job->company->name }} • {{ $job->location }}
+                                </p>
+
+                                <p class="text-sm text-gray-400">£{{ $job->salary }} / Year</p>
+                            </div>
+
+                            {{-- Job Type Badge --}}
+                            <span class="px-3 py-1 text-xs font-semibold text-white bg-indigo-600 rounded-full h-fit">
+                                {{ $job->type }}
+                            </span>
                         </div>
-                        <span class="p-2 text-white bg-blue-500 rounded-lg">{{ $job->type }}</span>
+
                     </div>
                 @empty
                     <p class="m-20 text-xl font-bold text-center text-white/50">No Jobs found!</p>
                 @endforelse
-                
+
             </div>
+
 
             {{-- Pagination --}}
             <div class="mt-6">

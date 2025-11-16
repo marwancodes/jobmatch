@@ -62,7 +62,7 @@
                     <div class="p-6 space-y-4 bg-gray-900 rounded-lg">
                         <div>
                             <p class="text-gray-400">Published Date</p>
-                            <p class="text-white">{{ $jobVacancy->created_at->format('M d, Y') }}</p>
+                            <p class="text-white">{{ $jobVacancy->created_at->format('d M Y') }}</p>
                         </div>
                         <div>
                             <p class="text-gray-400">Company</p>
